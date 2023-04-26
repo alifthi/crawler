@@ -6,3 +6,7 @@ def getResponse(url):
     except:
         return None
     return response
+def findLinks(htmlDoc):
+    soup = bs(htmlDoc)
+    return soup.find_all('a')
+
