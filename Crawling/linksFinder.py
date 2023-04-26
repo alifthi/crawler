@@ -1,34 +1,32 @@
 from bs4 import BeautifulSoup as bs
 import requests as req
-def getResponse(url):
-    try:
-        response = req.get(url)
-    except:
-        return None
-    return response
-def findLinks(htmlDoc):
-    soup = bs(htmlDoc)
-    return soup.find_all('a')
-def extractLinks(url):
-    response = getResponse(url)
-    if response == None:
-        return None
-    link = findLinks(response.text)
-    links = []
-    for li in link:
+class crawler:
+    def __init__(self,mainUrl) -> None:
+        self.mainUrl = mainUrl
+    def getResponse(self,url):
         try:
-            href = str(li.get('href'))
+            response = req.get(url)
         except:
-            continue
-        if ('#' not in href) and not ('extiw' == li.get('class')) and '.org' not in href:
-            links.append(href)
-    return links
-mainUrl = 'https://fa.wikipedia.org'
-url = 'https://fa.wikipedia.org/wiki/%D8%B5%D9%81%D8%AD%D9%87%D9%94_%D8%A7%D8%B5%D9%84%DB%8C'
-links = extractLinks(url)
-for link in links:
-    url = mainUrl + link
-    pageLinks = extractLinks(url)
-    if pageLinks == None:
-        continue
-    links.extend(link)
+            return None
+        return response
+    def findLinks(self,htmlDoc):
+        soup = bs(htmlDoc,'html.parser')
+        return soup.find_all('a')
+    def extractLinks(self,url):
+        url = self.mainUrl + url
+        response = self.getResponse(url)
+        
+        if response == None:
+            return None
+        link = self.findLinks(response.text)
+        links = []
+        for li in link:
+            try:
+                href = str(li.get('href'))
+            except:
+                continue
+            if ('#' not in href) and not ('extiw' == li.get('class')) and '.org' not in href:
+                links.append(href)
+        return links
+    def extractCorpus(self,url):
+        raise NotImplementedError()
