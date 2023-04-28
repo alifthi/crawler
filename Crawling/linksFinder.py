@@ -12,7 +12,7 @@ class linksExtractor:
     def findLinks(self,htmlDoc):
         soup = bs(htmlDoc,'html.parser')
         return soup.find_all('a')
-    def extractLinks(self,url):
+    def extractLinks(self,url,numLinks = None):
         url = self.mainUrl + url
         response = self.getResponse(url)
         if response == None:
@@ -26,6 +26,9 @@ class linksExtractor:
                 continue
             if ('#' not in href) and not ('extiw' == li.get('class')) and '.org' not in href:
                 links.append(href)
+            if not numLinks == None:
+                if numLinks >= len(links):
+                    return links 
         return links
     def extractCorpus(self,url):
         raise NotImplementedError()
