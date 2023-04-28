@@ -30,3 +30,7 @@ class linksExtractor:
                 if numLinks >= len(links):
                     return links 
         return links
+    @staticmethod
+    def saveLinks(links,addr):
+        with open(addr,'w') as file:
+            file.write('\n'.join(links))
