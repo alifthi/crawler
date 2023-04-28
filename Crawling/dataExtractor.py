@@ -5,4 +5,4 @@ class dataExtractor:
     def start(self):
         pass
     def loadLinks(self):
-            
+        pass    
