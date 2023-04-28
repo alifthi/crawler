@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup as bs
 import requests as req
-class crawler:
+class linksExtractor:
     def __init__(self,mainUrl) -> None:
         self.mainUrl = mainUrl
     def getResponse(self,url):
@@ -15,7 +15,6 @@ class crawler:
     def extractLinks(self,url):
         url = self.mainUrl + url
         response = self.getResponse(url)
-        
         if response == None:
             return None
         link = self.findLinks(response.text)
