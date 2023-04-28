@@ -6,15 +6,13 @@ if __name__ == '__main__':
     switch = sys.argv[1]
     links = [url]
     if switch == 'extractUrl':
-        from linksFinder import linksExtractor
+        from crawler import linksExtractor
         lEx = linksExtractor(mainUrl)
         links = lEx.start(numLinks=10)
         lEx.saveLinks(links=links,addr='./links.txt')
     elif switch == 'extractData':
-        from dataExtractor import dataExtractor as extractor
+        from crawler import dataExtractor as extractor
         extractor = extractor(mainUrl)
         links = extractor.loadLinks('../links/links.txt')
-        # for link in links:
-        #     extractor.start(link)
     elif switch == 'extractOneLink':
         pass

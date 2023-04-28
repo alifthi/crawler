@@ -1,14 +1,34 @@
-from bs4 import BeautifulSoup as bs
 import requests as req
-class linksExtractor:
-    def __init__(self,mainUrl) -> None:
-        self.mainUrl = mainUrl
-    def getResponse(self,url):
+from bs4 import BeautifulSoup as bs
+class crawler:
+    def start():
+        pass
+    @staticmethod
+    def getResponse(url):
         try:
             response = req.get(url)
         except:
             return None
         return response
+    
+class dataExtractor(crawler):
+    def __init__(self,mainUrl) -> None:
+        self.mainUrl = mainUrl
+    def start(self):
+        pass
+    def loadLinks(self,urlAddr):
+        with open(urlAddr,'r') as file:
+            self.links = file.read()
+        return self.links
+    def getCorpus(self):
+        pass
+    def getImages(self):
+        pass
+    
+'''       links extractor class       '''
+class linksExtractor(crawler):
+    def __init__(self,mainUrl) -> None:
+        self.mainUrl = mainUrl
     def start(self,numLinks = None):
         links = []
         links.extend(self.extractLinks(''))
@@ -20,7 +40,6 @@ class linksExtractor:
                 if numLinks <= len(links):
                     return links[:numLinks]
             links.extend(link)
-
     def findLinks(self,htmlDoc):
         soup = bs(htmlDoc,'html.parser')
         return soup.find_all('a')
