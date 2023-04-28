@@ -30,5 +30,3 @@ class linksExtractor:
                 if numLinks >= len(links):
                     return links 
         return links
-    def extractCorpus(self,url):
-        raise NotImplementedError()
