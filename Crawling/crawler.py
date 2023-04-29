@@ -20,16 +20,12 @@ class dataExtractor(crawler):
         with open(urlAddr,'r') as file:
             self.links = file.read()
         return self.links
-    def getCorpus(self,html):
-        soup = bs(html,'html.parser')
-        paragraph = soup.find_all('p')
-        corpus = []
-        for p in paragraph:
-            corpus.append(p.text)
+    def getCorpus(self,soup):
+        corpus = soup.find_all('p')
         return corpus
-    def getImages(self):
-        pass
-    
+    def getImages(self,soup):
+        images = soup.find_all('img')
+        return images
 '''       links extractor class       '''
 class linksExtractor(crawler):
     def __init__(self,mainUrl) -> None:
