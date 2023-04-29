@@ -26,6 +26,9 @@ class dataExtractor(crawler):
     def getImages(self,soup):
         images = soup.find_all('img')
         return images
+    def getHeader(self,soup):
+        headers = soup.find_all('span',attrs={'class':'mw-headline'})
+        return headers
 '''       links extractor class       '''
 class linksExtractor(crawler):
     def __init__(self,mainUrl) -> None:
