@@ -10,12 +10,29 @@ class crawler:
         except:
             return None
         return response
-    
+    @staticmethod
+    def save(List,addr):
+        with open(addr,'w') as file:
+            file.write('\n'.join(List))
 class dataExtractor(crawler):
     def __init__(self,mainUrl) -> None:
         self.mainUrl = mainUrl
-    def start(self):
-        pass
+    def start(self,links,numPages = 10):
+        corpus = []
+        headers = []
+        images = []
+        for i,link in enumerate(links):
+            response = self.getResponse(self.mainUrl + link)
+            if response == None:
+                continue
+            soup = bs(response.text)
+            corpus.extend(self.getCorpus(soup=soup))
+            headers.extend(self.getHeader(soup=soup))
+            images.append(self.getImages(soup=soup))
+            if i == numPages:
+                break
+        return [corpus,images,headers]
+            
     def loadLinks(self,urlAddr):
         with open(urlAddr,'r') as file:
             self.links = file.read()
@@ -62,7 +79,3 @@ class linksExtractor(crawler):
             if ('#' not in href) and not ('extiw' == li.get('class')) and '.org' not in href:
                 links.append(href)
         return links
-    @staticmethod
-    def saveLinks(links,addr):
-        with open(addr,'w') as file:
-            file.write('\n'.join(links))
