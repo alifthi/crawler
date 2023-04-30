@@ -12,7 +12,7 @@ class crawler:
         return response
     @staticmethod
     def save(List,addr):
-        with open(addr,'w') as file:
+        with open(addr,'w',encoding='utf-8') as file:
             file.write('\n'.join(List))
 class dataExtractor(crawler):
     def __init__(self,mainUrl) -> None:
@@ -25,10 +25,13 @@ class dataExtractor(crawler):
             response = self.getResponse(self.mainUrl + link)
             if response == None:
                 continue
-            soup = bs(response.text)
-            corpus.extend(self.getCorpus(soup=soup))
-            headers.extend(self.getHeader(soup=soup))
-            images.append(self.getImages(soup=soup))
+            soup = bs(response.text,'html.parser')
+            corp = self.getCorpus(soup=soup)
+            corpus.extend(corp) if not corp == None else None  
+            header = self.getHeader(soup=soup)
+            headers.extend(header) if not header == None else None
+            image = self.getImages(soup=soup)
+            images.extend(image) if not image == None else None
             if i == numPages:
                 break
         return [corpus,images,headers]
@@ -39,12 +42,15 @@ class dataExtractor(crawler):
         return self.links
     def getCorpus(self,soup):
         corpus = soup.find_all('p')
+        corpus = [c.text for c in corpus]
         return corpus
     def getImages(self,soup):
         images = soup.find_all('img')
+        images = [img.get('src') for img in images]
         return images
     def getHeader(self,soup):
         headers = soup.find_all('span',attrs={'class':'mw-headline'})
+        headers = [h.text for h in headers]
         return headers
 '''       links extractor class       '''
 class linksExtractor(crawler):
