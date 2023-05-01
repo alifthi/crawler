@@ -7,8 +7,8 @@ if __name__ == '__main__':
     parser.add_argument('-u','--url',default='https://fa.wikipedia.org',help='crawling sites main page')
     parser.add_argument('-m','--mode',default='extractUrl',help='extraction mode')
     parser.add_argument('-n','--numOfUrl',default=10,type=int,help='number of pages that want to crawl')
-    parser.add_argument('-s','--savePath',default='../Data/',help='the path that you want to save data')
-    parser.add_argument('-lp','--loadPath',default='../links/',help='links path')
+    parser.add_argument('-s','--savePath',default='../crawlingData/',help='the path that you want to save data')
+    parser.add_argument('-lp','--loadPath',default='../crawlingData/links/',help='links path')
     args = vars(parser.parse_args())
     mainUrl = args['url']
     savePath = args['savePath']
@@ -30,5 +30,5 @@ if __name__ == '__main__':
         extractor.save(corpus,savePath + 'corpus/corpus.txt')
         extractor.save(images,savePath + 'imageLinks/imageLinks.txt')
         extractor.save(header,savePath + 'header/header.txt')
-    elif switch == 'extractOneLink':
+    elif mode == 'extractOneLink':
         pass
