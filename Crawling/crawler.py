@@ -58,15 +58,22 @@ class linksExtractor(crawler):
         self.mainUrl = mainUrl
     def start(self,numLinks = None):
         links = []
+        linksLen = 0
         links.extend(self.extractLinks(''))
         for link in links:
             pageLinks = self.extractLinks(link)
             if pageLinks == None:
                 continue
+            if type(link) == type(''):
+                links.append(link)
+                linLen = 1
+            else:
+                linLen = len(link)
+                links.extend(link)
+            linksLen += linLen
             if not numLinks == None:
-                if numLinks <= len(links):
+                if numLinks <= linksLen:
                     return links[:numLinks]
-            links.extend(link)
     def findLinks(self,htmlDoc):
         soup = bs(htmlDoc,'html.parser')
         return soup.find_all('a')
