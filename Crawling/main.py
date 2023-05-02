@@ -26,7 +26,7 @@ if __name__ == '__main__':
         from crawler import dataExtractor as extractor
         extractor = extractor(mainUrl)
         links = extractor.loadLinks(loadPath + 'links.txt')
-        corpus,images,header = extractor.start(links=links) 
+        corpus,images,header = extractor.start(links=links,numPages=numLinks) 
         extractor.save(corpus,savePath + 'corpus/corpus.txt')
         extractor.save(images,savePath + 'imageLinks/imageLinks.txt')
         extractor.save(header,savePath + 'header/header.txt')
