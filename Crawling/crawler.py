@@ -30,7 +30,7 @@ class dataExtractor(crawler):
             if contentDivTags == None:
                 continue
             corp = self.getCorpus(soup=contentDivTags)
-            corpus.extend(corp) if not corp == None else None  
+            corpus.append(corp) if not corp == None else None  
             header = self.getHeader(soup=contentDivTags)
             headers.extend(header) if not header == None else None
             image = self.getImages(soup=contentDivTags)
@@ -41,11 +41,10 @@ class dataExtractor(crawler):
             
     def loadLinks(self,urlAddr):
         with open(urlAddr,'r') as file:
-            self.links = file.read()
+            self.links = file.readlines()
         return self.links
     def getCorpus(self,soup):
-        corpus = soup.find_all('p')
-        corpus = [c.text for c in corpus]
+        corpus = soup.text
         return corpus
     def getImages(self,soup):
         images = soup.find_all('img')
@@ -65,6 +64,8 @@ class linksExtractor(crawler):
         links.extend(self.extractLinks(''))
         for link in links:
             pageLinks = self.extractLinks(link)
+            if pageLinks == None:
+                continue
             if type(pageLinks) == type(''):
                 links.append(pageLinks)
                 linLen = 1
@@ -84,6 +85,7 @@ class linksExtractor(crawler):
             return None
         soup = bs(response.text,'html.parser')
         contentDivTags = soup.find('div',attrs={'id':'mw-content-text'})    
+        for tag in contentDivTags.find_all('span',attrs={'mw-editsection'}): tag.decompose()
         link = self.findLinks(contentDivTags)
         links = []
         for li in link:
