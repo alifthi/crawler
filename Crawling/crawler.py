@@ -13,15 +13,25 @@ class crawler:
     @staticmethod
     def save(List,addr):
         with open(addr,'w',encoding='utf-8') as file:
-            file.write('\n'.join(List))
+            file.write(List)
+    def saveAsJson(self,List,addr):
+        import json
+        with open(addr,'w',encoding='utf-8') as file:
+            json.dump(self.makedictionary(*List),file,indent=6)
+    @staticmethod
+    def makedictionary(url,corpus,headers,imageLinks):
+        jsonDict = {}
+        for i,u in enumerate(url):
+            jsonDict.update({u:{'corpus':corpus[i],'header':headers[i],'imageLinks':imageLinks[i],'flag':False}})
+        return jsonDict
 class dataExtractor(crawler):
     def __init__(self,mainUrl) -> None:
         self.mainUrl = mainUrl
-    def start(self,links,numPages = 10):
+    def start(self,links):
         corpus = []
         headers = []
         images = []
-        for i,link in enumerate(links):
+        for link in links:
             response = self.getResponse(self.mainUrl + link)
             if response == None:
                 continue
@@ -30,13 +40,11 @@ class dataExtractor(crawler):
             if contentDivTags == None:
                 continue
             corp = self.getCorpus(soup=contentDivTags)
-            corpus.append(corp) if not corp == None else None  
+            corpus.extend(corp) if not corp == None else None  
             header = self.getHeader(soup=contentDivTags)
-            headers.extend(header) if not header == None else None
+            headers.append(header)
             image = self.getImages(soup=contentDivTags)
-            images.extend(image) if not image == None else None
-            if i >= numPages:
-                break
+            images.append(image)
         return [corpus,images,headers]
             
     def loadLinks(self,urlAddr):
@@ -44,16 +52,19 @@ class dataExtractor(crawler):
             self.links = file.readlines()
         return self.links
     def getCorpus(self,soup):
-        corpus = soup.text
+        corpus = soup.find_all('p')
+        corpus = [c.text for c in corpus]
         return corpus
     def getImages(self,soup):
         images = soup.find_all('img')
-        images = [img.get('src') for img in images]
-        return images
+        imageLinks = ''
+        for img in images: imageLinks = imageLinks + img.get('src') + '\n' 
+        return imageLinks
     def getHeader(self,soup):
         headers = soup.find_all('span',attrs={'class':'mw-headline'})
-        headers = [h.text for h in headers]
-        return headers
+        header = ''
+        for h in headers: header = header + h.text + '\n'
+        return header
 '''       links extractor class       '''
 class linksExtractor(crawler):
     def __init__(self,mainUrl) -> None:
