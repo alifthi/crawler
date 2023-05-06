@@ -70,14 +70,18 @@ class linksExtractor(crawler):
     def __init__(self,mainUrl) -> None:
         self.mainUrl = mainUrl
     def start(self,numLinks = None):
+        findFromTabel = True
         links = []
         linksLen = 0
-        links.extend(self.extractLinks(''))
+        if findFromTabel:
+            links.extend(self.extractLinks('/wiki/%D9%88%DB%8C%DA%A9%DB%8C%E2%80%8C%D9%BE%D8%AF%DB%8C%D8%A7:%D9%81%D9%87%D8%B1%D8%B3%D8%AA_%D8%B3%D8%B1%DB%8C%D8%B9',findFromTabel=findFromTabel))
+        else:
+            links.extend(self.extractLinks(''))
         for link in links:
             pageLinks = self.extractLinks(link)
             if pageLinks == None:
                 continue
-            if type(pageLinks) == type(''):
+            if isinstance(pageLinks,str):
                 links.append(pageLinks)
                 linLen = 1
             else:
@@ -89,15 +93,18 @@ class linksExtractor(crawler):
                     return links[:numLinks]
     def findLinks(self,soup):
         return soup.find_all('a')
-    def extractLinks(self,url):
+    def extractLinks(self,url,findFromTabel = False):
         url = self.mainUrl + url
         response = self.getResponse(url)
         if response == None:
             return None
         soup = bs(response.text,'html.parser')
-        contentDivTags = soup.find('div',attrs={'id':'mw-content-text'})    
-        for tag in contentDivTags.find_all('span',attrs={'mw-editsection'}): tag.decompose()
-        link = self.findLinks(contentDivTags)
+        if not findFromTabel:
+            Tags = soup.find('div',attrs={'id':'mw-content-text'})    
+            for tag in Tags.find_all('span',attrs={'mw-editsection'}): tag.decompose()
+        elif findFromTabel:
+            Tags = soup.find('tbody')
+        link = self.findLinks(Tags)
         links = []
         for li in link:
             try:
@@ -107,3 +114,5 @@ class linksExtractor(crawler):
             if ('#' not in href) and not ('extiw' == li.get('class')) and '.org' not in href:
                 links.append(href)
         return links
+    def extractLinksFromTable(self):
+        pass

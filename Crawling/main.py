@@ -6,7 +6,7 @@ if __name__ == '__main__':
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument('-u','--url',default='https://fa.wikipedia.org',help='crawling sites main page')
     parser.add_argument('-m','--mode',default='extractUrl',help='extraction mode')
-    parser.add_argument('-n','--numOfUrl',default=10,type=int,help='number of pages that want to crawl')
+    parser.add_argument('-n','--numOfUrl',default=None,type=int,help='number of pages that want to crawl')
     parser.add_argument('-s','--savePath',default='../crawlingData/',help='the path that you want to save data')
     parser.add_argument('-lp','--loadPath',default='../crawlingData/links/',help='links path')
     parser.add_argument('-sm','--saveMode',default='json',help='saving data mode')
